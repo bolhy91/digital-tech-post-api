@@ -1,12 +1,23 @@
+import * as dotenv from 'dotenv';
+dotenv.config()
 import express from 'express';
-import {PORT} from "./config/config";
+import cors from 'cors';
+import {corsOptions, PORT} from "./config/config";
 
-const api = express()
+const app = express();
 
-api.get('/', (_, res) => {
+/**
+   ## Configuration ##
+**/
+app.use(cors(corsOptions));
+app.use(express.json());
+
+app.get('/api', (_, res) => {
     res.send('the api run');
 });
 
-api.listen(PORT, () => {
+app.listen(PORT, () => {
     return console.log(`server is listening on ${PORT}`);
 });
+
+export { app }
