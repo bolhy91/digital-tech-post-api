@@ -1,5 +1,5 @@
-import {User} from "./user.interface";
-import {PostStatus} from "../enums/post-status.enum";
+import {PostStatus} from "../shared/enums/post-status.enum";
+import {User} from "../user/user.interface";
 
 export interface Post {
     image?: string;
