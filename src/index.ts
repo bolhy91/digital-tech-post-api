@@ -38,7 +38,7 @@ class Index {
 
     private connectMongoDB() {
         mongoose.set('strictQuery', false);
-        mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).then(() => {
+        mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false }).then(() => {
             console.log('Connected to database ')
         }).catch((err) => {
             console.error(`Error connecting to the database. \n${err}`);

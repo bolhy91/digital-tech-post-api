@@ -6,7 +6,9 @@ import {Post} from "./post.interface";
 const postSchema = new mongoose.Schema({
     image: String,
     message: String,
-    likes: Array<User>,
+    likes: [
+        {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+    ],
     author: {
         ref: 'User',
         type: mongoose.Schema.Types.ObjectId
