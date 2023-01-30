@@ -15,11 +15,11 @@ class Index {
         this.api = express();
         this.connectMongoDB();
         this.startMiddlewares();
-        this.startControllers();
+        this.startControllers(controller);
     }
 
     startExpress() {
-        app.listen(PORT, () => {
+        this.api.listen(PORT, () => {
             return console.log(`server is listening on ${PORT}`);
         });
     }
@@ -32,13 +32,13 @@ class Index {
 
     private startControllers(controllers: Controller[]) {
         controllers.forEach((controller) => {
-            this.app.use('/', controller.router);
+            this.api.use('/api', controller.router);
         });
     }
 
     private connectMongoDB() {
         mongoose.set('strictQuery', false);
-        mongoose.connect(ATLAS_URI).then(() => {
+        mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).then(() => {
             console.log('Connected to database ')
         }).catch((err) => {
             console.error(`Error connecting to the database. \n${err}`);
