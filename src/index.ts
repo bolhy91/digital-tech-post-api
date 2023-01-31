@@ -5,29 +5,45 @@ import express from 'express';
 import cors from 'cors';
 import {ATLAS_URI, corsOptions, PORT} from "./config/config";
 import mongoose from "mongoose";
+import AuthController from 'auth/auth.controller'
+import Controller from 'shared/interfaces/controller.interface';
 
-const app = express();
+class Index {
+    public api: express.Application;
 
-/**
- ## Configuration ##
- **/
-app.use(cors(corsOptions));
-app.use(express.json());
+    constructor(controller: Controller[]) {
+        this.api = express();
+        this.connectMongoDB();
+        this.startMiddlewares();
+        this.startControllers(controller);
+    }
 
-app.get('/api', (_, res) => {
-    res.send('the api run');
-});
+    startExpress() {
+        this.api.listen(PORT, () => {
+            return console.log(`server is listening on ${PORT}`);
+        });
+    }
 
-mongoose.set('strictQuery', false);
-mongoose.connect(ATLAS_URI).then(() => {
-    console.log('Connected to database ')
-}).catch((err) => {
-    console.error(`Error connecting to the database. \n${err}`);
-})
+    private startMiddlewares() {
+        //Configuration
+        this.api.use(cors(corsOptions));
+        this.api.use(express.json());
+    }
 
-app.listen(PORT, () => {
-    return console.log(`server is listening on ${PORT}`);
-});
+    private startControllers(controllers: Controller[]) {
+        controllers.forEach((controller) => {
+            this.api.use('/api', controller.router);
+        });
+    }
 
+    private connectMongoDB() {
+        mongoose.set('strictQuery', false);
+        mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false }).then(() => {
+            console.log('Connected to database ')
+        }).catch((err) => {
+            console.error(`Error connecting to the database. \n${err}`);
+        })
+    }
+}
 
-export {app}
+export default Index;

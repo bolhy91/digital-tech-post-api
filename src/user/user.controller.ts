@@ -11,7 +11,7 @@ class UserController implements Controller {
         this.startRoutes();
     }
 
-    private startRoutes() {
+    startRoutes() {
         this.router.get(`${this.path}/:id`, this.getUserById);
     }
 
@@ -25,3 +25,5 @@ class UserController implements Controller {
         }
     }
 }
+
+export default UserController;

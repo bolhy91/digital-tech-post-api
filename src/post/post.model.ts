@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
 import {PostStatus} from "../shared/enums/post-status.enum";
 import {User} from "../user/user.interface";
+import {Post} from "./post.interface";
 
 const postSchema = new mongoose.Schema({
     image: String,
     message: String,
-    likes: Array<User>,
+    likes: [
+        {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+    ],
     author: {
         ref: 'User',
         type: mongoose.Schema.Types.ObjectId
@@ -15,10 +18,11 @@ const postSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        enum: PostStatus
+        enum: PostStatus,
+        default: PostStatus.DRAFTED
     }
 });
 
-const post = mongoose.model<Post, & mongoose.Document>('Post', postSchema);
+const postModel = mongoose.model<Post & mongoose.Document>('Post', postSchema);
 
-export default post;
+export default postModel;
