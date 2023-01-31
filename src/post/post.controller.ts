@@ -24,12 +24,11 @@ class PostController implements Controller {
             .all(`${this.path}/*`, authMiddleware)
             .patch(`${this.path}/:id/like`, this.likePost)
             .post(`${this.path}`, authMiddleware, multerStorage, validationMiddleware(PostDto), this.createPost);
-
     }
 
     private getPosts = async (request: Request, response: Response, next: NextFunction) => {
         try {
-            const posts = await this.postModel.find({}).sort('create_at').populate('author')
+            const posts = await this.postModel.find({}).sort('create_at').populate('author').populate('likes')
             response.json(posts);
         } catch (error) {
             next(error);
@@ -39,10 +38,14 @@ class PostController implements Controller {
     private createPost = async (request: RequestByUser, response: Response, next: NextFunction) => {
         try {
             const postDto: PostDto = request.body;
+            let image = null;
+            if (request.files && request.files[0]) {
+                image = request.files[0].location
+            }
             const newPost = new this.postModel({
                 ...postDto,
                 author: request.user._id,
-                image: request.files[0].location,
+                image,
                 create_at: Date.now()
             });
             const save = await newPost.save();

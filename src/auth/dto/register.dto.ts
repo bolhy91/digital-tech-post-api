@@ -7,5 +7,6 @@ export class RegisterDto {
     surname: string;
     @IsString()
     username: string;
+    role?: string;
     avatar?: string;
 }
