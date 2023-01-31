@@ -4,9 +4,7 @@
     "description": "Post Api",
     "main": "src/server.ts",
     "scripts": {
-        "build": "rimraf dist && tsc",
-        "ts.check": "tsc --project tsconfig.json",
-        "add-build": "git add dist",
+        "build": "rimraf dist/server.js && tsc",
 
         "start": "nodemon src/server.ts",
         "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
@@ -14,9 +12,7 @@
         "postinstall": "tsc"
     },
     "pre-commit": [
-        "ts.check",
-        "build",
-        "add-build"
+
     ],
     "keywords": [
         "post",

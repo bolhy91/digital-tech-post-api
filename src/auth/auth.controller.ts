@@ -11,8 +11,8 @@ import {Role} from "../shared/enums/role.enum";
 import {AVATAR_DEFAULT} from "../config/config";
 
 class AuthController implements Controller {
-    private path: string = '/auth';
-    private router: Router = Router();
+    path: string = '/auth';
+    router: Router = Router();
     private userModel = userModel;
     public authService: AuthService;
 
@@ -35,7 +35,7 @@ class AuthController implements Controller {
             }
             let avatar: string = AVATAR_DEFAULT;
             if (request.files && request.files[0]) {
-                avatar =  request.files[0].location;
+                avatar = request.files[0].location;
             }
             const newUser: RegisterDto = {name, surname, username, role, avatar};
             const {token, user} = await this.authService.register(newUser);
