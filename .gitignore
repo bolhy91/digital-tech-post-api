@@ -51,7 +51,7 @@ node_modules/
 jspm_packages/
 
 # Javasctript Compiled
-build/
+dist/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
