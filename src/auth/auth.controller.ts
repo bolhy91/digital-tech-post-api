@@ -7,6 +7,8 @@ import {multerStorage} from "../lib/multer";
 import HttpException from "../shared/exceptions/http-exception";
 import {LoginDto} from "./dto/login.dto";
 import validationMiddleware from "../middleware/validation.middleware";
+import {Role} from "../shared/enums/role.enum";
+import {AVATAR_DEFAULT} from "../config/config";
 
 class AuthController implements Controller {
     private path: string = '/auth';
@@ -27,7 +29,15 @@ class AuthController implements Controller {
     private register = async (request: Request, response: Response, next: NextFunction) => {
         const {name, surname, username} = request.body;
         try {
-            const newUser: RegisterDto = {name, surname, username, avatar: request.files[0].location};
+            let role = Role.USER;
+            if (request.body.role) {
+                role = request.body.role
+            }
+            let avatar: string = AVATAR_DEFAULT;
+            if (request.files && request.files[0]) {
+                avatar =  request.files[0].location;
+            }
+            const newUser: RegisterDto = {name, surname, username, role, avatar};
             const {token, user} = await this.authService.register(newUser);
             response.json({token, user});
         } catch (error: HttpException) {
@@ -38,7 +48,7 @@ class AuthController implements Controller {
 
     private login = async (request: Request, response: Response, next: NextFunction) => {
         const loginDto: LoginDto = request.body;
-        const userLogin = await this.userModel.findOne({username: loginDto.username});
+        const userLogin = await this.userModel.findOne({username: loginDto.username}).exec();
         if (userLogin) {
             const token = this.authService.createToken(userLogin);
             response.json({

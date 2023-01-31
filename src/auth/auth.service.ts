@@ -25,6 +25,7 @@ class AuthService {
         const expiresIn = 60 * 60; // an hour
         const dataStoredInToken = {
             _id: user._id,
+            role: user.role
         };
         return {
             expiresIn,

@@ -8,6 +8,8 @@ export class PostDto {
     @IsString()
     @IsNotEmpty()
     location: string;
+
     status?: PostStatus
-    image: string;
+
+    image?: string;
 }
